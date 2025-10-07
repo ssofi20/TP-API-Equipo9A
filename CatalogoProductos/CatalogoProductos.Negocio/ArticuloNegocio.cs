@@ -40,23 +40,6 @@ namespace CatalogoProductos.Negocio
                     aux.Categoria.Id = (int)datos.Lector["IdCategoria"];
                     aux.Categoria.Descripcion = (string)datos.Lector["Categoria"];
 
-                    //CARGAR TODAS LAS IMGENES DEL ARTICULO EN LA LISTA 
-                    AccesoDatos datosImagenes = new AccesoDatos();
-                    datosImagenes.setearConsulta("SELECT Id, ImagenUrl, IdArticulo FROM IMAGENES WHERE IdArticulo = @articuloId");
-                    datosImagenes.setearParametro("@articuloId", aux.Id);
-                    datosImagenes.ejecutarLectura();
-
-                    aux.Imagenes = new List<Imagen>();
-                    while (datosImagenes.Lector.Read())
-                    {
-                        Imagen img = new Imagen();
-                        img.Id = (int)datosImagenes.Lector["id"];
-                        img.Url = (string)datosImagenes.Lector["ImagenUrl"];
-                        img.ArticuloId = (int)datosImagenes.Lector["IdArticulo"];
-                        aux.Imagenes.Add(img);
-                    }
-
-                    datosImagenes.cerrarConexion();
                     lista.Add(aux);
                 }
                 return lista;
@@ -119,23 +102,9 @@ namespace CatalogoProductos.Negocio
                 datos.setearParametro("@IdCategoria", articulo.Categoria.Id);
                 datos.setearParametro("@Precio", articulo.Precio);
                 datos.setearParametro("@Id", articulo.Id);
+                
                 datos.ejecutarAccion();
-
-                datos.cerrarConexion();
-                datos = new AccesoDatos();
-                datos.setearConsulta("DELETE FROM IMAGENES WHERE IdArticulo = @Id");
-                datos.setearParametro("@Id", articulo.Id);
-                datos.ejecutarAccion();
-
-                datos.cerrarConexion();
-
-                datos = new AccesoDatos(); 
-
-                foreach (Imagen img in articulo.Imagenes)
-                {
-                    agregarImagen(img);
-                }
-
+                
             }
             catch (Exception ex)
             {
