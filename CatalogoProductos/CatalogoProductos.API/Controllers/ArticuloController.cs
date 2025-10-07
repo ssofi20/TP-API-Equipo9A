@@ -7,31 +7,32 @@ using System.Web.Http;
 
 namespace CatalogoProductos.API.Controllers
 {
-    public class ProductoController : ApiController
+    public class ArticuloController : ApiController
     {
-        // GET: api/Producto (Listar Productos)
+        // GET: api/Articulo (Listar Articulos)
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET: api/Producto/5 (Buscar Producto por Id)
+        // GET: api/Articulo/5 (Buscar Articulo por Id)
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST: api/Producto (Dar de alta Producto)
+        // POST: api/Articulo (Dar de alta Articulo)
         public void Post([FromBody]string value)
         {
         }
 
-        // PUT: api/Producto/5 (Modificar Producto)
+        // PUT: api/Articulo/5 (Modificar Articulo)
         public void Put(int id, [FromBody]string value)
         {
+
         }
 
-        // DELETE: api/Producto/5 (Eliminar Producto)
+        // DELETE: api/Articulo/5 (Eliminar Articulo)
         public void Delete(int id)
         {
         }
