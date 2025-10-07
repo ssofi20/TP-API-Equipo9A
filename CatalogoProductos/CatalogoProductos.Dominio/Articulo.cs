@@ -5,7 +5,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dominio
+namespace CatalogoProductos.Dominio
 {
     public class Articulo
     {

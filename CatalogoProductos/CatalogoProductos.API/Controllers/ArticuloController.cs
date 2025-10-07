@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using CatalogoProductos.Dominio;
+using CatalogoProductos.Negocio;
 
 namespace CatalogoProductos.API.Controllers
 {
@@ -22,12 +24,12 @@ namespace CatalogoProductos.API.Controllers
         }
 
         // POST: api/Articulo (Dar de alta Articulo)
-        public void Post([FromBody]string value)
+        public void Post([FromBody]Articulo value)
         {
         }
 
         // PUT: api/Articulo/5 (Modificar Articulo)
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]Articulo value)
         {
 
         }

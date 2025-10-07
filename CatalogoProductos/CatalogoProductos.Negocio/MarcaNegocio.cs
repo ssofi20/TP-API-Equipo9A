@@ -4,9 +4,9 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using dominio;
+using CatalogoProductos.Dominio;
 
-namespace negocio
+namespace CatalogoProductos.Negocio
 {
     public class MarcaNegocio
     {
