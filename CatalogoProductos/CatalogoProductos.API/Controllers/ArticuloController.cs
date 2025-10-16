@@ -20,7 +20,7 @@ namespace CatalogoProductos.API.Controllers
         }
 
         // GET: api/Articulo/5 (Buscar Articulo por Id)
-        public ArticuloNegocio Get(int id)
+        public Articulo Get(int id)
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             List<Articulo> lista = negocio.listar();
