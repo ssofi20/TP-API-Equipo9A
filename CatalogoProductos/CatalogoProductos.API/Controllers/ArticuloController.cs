@@ -8,6 +8,7 @@ using CatalogoProductos.API.DTOs;
 using CatalogoProductos.Dominio;
 using CatalogoProductos.Negocio;
 
+
 namespace CatalogoProductos.API.Controllers
 {
     public class ArticuloController : ApiController
@@ -19,9 +20,12 @@ namespace CatalogoProductos.API.Controllers
         }
 
         // GET: api/Articulo/5 (Buscar Articulo por Id)
-        public string Get(int id)
+        public ArticuloNegocio Get(int id)
         {
-            return "value";
+            ArticuloNegocio negocio = new ArticuloNegocio();
+            List<Articulo> lista = negocio.listar();
+
+            return lista.Find(x => x.Id == id);
         }
 
         // POST: api/Articulo (Dar de alta Articulo)
@@ -83,6 +87,9 @@ namespace CatalogoProductos.API.Controllers
         // DELETE: api/Articulo/5 (Eliminar Articulo)
         public void Delete(int id)
         {
+            ArticuloNegocio negocio = new ArticuloNegocio();
+            negocio.eliminar(id);
+
         }
     }
 }
