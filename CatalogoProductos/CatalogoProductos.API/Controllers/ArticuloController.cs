@@ -31,15 +31,56 @@ namespace CatalogoProductos.API.Controllers
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo nuevo = new Articulo();
-            nuevo.Codigo = art.Codigo;
-            nuevo.Nombre = art.Nombre;
-            nuevo.Descripcion = art.Descripcion;
-            nuevo.Precio = art.Precio;
-            nuevo.Marca = new Marca { Id = art.IdMarca };
-            nuevo.Categoria = new Categoria { Id = art.IdCategoria };
+
+            if (!string.IsNullOrEmpty(art.Codigo))
+            {
+                nuevo.Codigo = art.Codigo;
+            }else
+            {
+                throw new Exception("Debe ingresar un código.");
+            }
+
+            if (!string.IsNullOrEmpty(art.Nombre))
+            {
+                nuevo.Nombre = art.Nombre;
+            }else
+            {
+                throw new Exception("Debe ingresar un nombre.");
+            }
+
+            if (!string.IsNullOrEmpty(art.Descripcion))
+            {
+                nuevo.Descripcion = art.Descripcion;
+            }else
+            {
+                throw new Exception("Debe ingresar una descripcion.");
+            }
+
+            if (art.Precio > 0)
+            {
+                nuevo.Precio = art.Precio;
+            }else
+            {
+                throw new Exception("Debe ingresar un precio.");
+            }
+
+            if (art.IdMarca > 0)
+            {
+                nuevo.Marca = new Marca { Id = art.IdMarca };
+            }else
+            {
+                throw new Exception("Debe ingresar una marca.");
+            }
+
+            if (art.IdCategoria > 0)
+            {
+                nuevo.Categoria = new Categoria { Id = art.IdCategoria };
+            } else
+            {
+                throw new Exception("Debe ingresar una categoria.");
+            }
 
             negocio.agregar(nuevo);
-
         }
 
         // PUT: api/Articulo/5 (Modificar Articulo)
