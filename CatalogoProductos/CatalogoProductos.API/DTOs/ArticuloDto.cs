@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 
@@ -13,5 +14,8 @@ namespace CatalogoProductos.API.DTOs
         public int IdMarca { get; set; }
         public int IdCategoria { get; set; }
         public decimal Precio { get; set; }
+
+        //Propiedad nueva para recibir las URLs de las imágene
+        public List<string> UrlImagenes { get; set; } = new List<string>();
     }
 }
