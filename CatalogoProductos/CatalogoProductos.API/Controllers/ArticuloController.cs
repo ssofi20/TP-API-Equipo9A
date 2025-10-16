@@ -1,21 +1,23 @@
-﻿using System;
+﻿using CatalogoProductos.API.DTOs;
+using CatalogoProductos.Dominio;
+using CatalogoProductos.Negocio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using CatalogoProductos.API.DTOs;
-using CatalogoProductos.Dominio;
-using CatalogoProductos.Negocio;
+using System.Web.UI.WebControls.WebParts;
 
 namespace CatalogoProductos.API.Controllers
 {
     public class ArticuloController : ApiController
     {
         // GET: api/Articulo (Listar Articulos)
-        public IEnumerable<string> Get()
+        public IEnumerable<Articulo> Get()
         {
-            return new string[] { "value1", "value2" };
+            ArticuloNegocio negocio = new ArticuloNegocio();
+            return negocio.listar();
         }
 
         // GET: api/Articulo/5 (Buscar Articulo por Id)
@@ -25,8 +27,60 @@ namespace CatalogoProductos.API.Controllers
         }
 
         // POST: api/Articulo (Dar de alta Articulo)
-        public void Post([FromBody]Articulo value)
+        public void Post([FromBody]ArticuloDto art)
         {
+            ArticuloNegocio negocio = new ArticuloNegocio();
+            Articulo nuevo = new Articulo();
+
+            if (!string.IsNullOrEmpty(art.Codigo))
+            {
+                nuevo.Codigo = art.Codigo;
+            }else
+            {
+                throw new Exception("Debe ingresar un código.");
+            }
+
+            if (!string.IsNullOrEmpty(art.Nombre))
+            {
+                nuevo.Nombre = art.Nombre;
+            }else
+            {
+                throw new Exception("Debe ingresar un nombre.");
+            }
+
+            if (!string.IsNullOrEmpty(art.Descripcion))
+            {
+                nuevo.Descripcion = art.Descripcion;
+            }else
+            {
+                throw new Exception("Debe ingresar una descripcion.");
+            }
+
+            if (art.Precio > 0)
+            {
+                nuevo.Precio = art.Precio;
+            }else
+            {
+                throw new Exception("Debe ingresar un precio.");
+            }
+
+            if (art.IdMarca > 0)
+            {
+                nuevo.Marca = new Marca { Id = art.IdMarca };
+            }else
+            {
+                throw new Exception("Debe ingresar una marca.");
+            }
+
+            if (art.IdCategoria > 0)
+            {
+                nuevo.Categoria = new Categoria { Id = art.IdCategoria };
+            } else
+            {
+                throw new Exception("Debe ingresar una categoria.");
+            }
+
+            negocio.agregar(nuevo);
         }
 
         // PUT: api/Articulo/5 (Modificar Articulo)
@@ -65,14 +119,14 @@ namespace CatalogoProductos.API.Controllers
                 articuloModificar.Nombre = articulo.Nombre;
             if(!string.IsNullOrEmpty(articulo.Codigo))
                 articuloModificar.Codigo = articulo.Codigo;
-            if(!string.IsNullOrEmpty(articulo.Descripcio))
-                articuloModificar.Descripcion = articulo.Descripcio;
+            if(!string.IsNullOrEmpty(articulo.Descripcion))
+                articuloModificar.Descripcion = articulo.Descripcion;
             articuloModificar.Marca = new Marca();
             if(articulo.IdMarca > 0 && articulo.IdMarca != articuloModificar.Marca.Id)
                 articuloModificar.Marca.Id = articulo.IdMarca;
             articuloModificar.Categoria = new Categoria();
-            if(articulo.IdCateogria > 0 && articulo.IdCateogria != articuloModificar.Categoria.Id)
-                articuloModificar.Categoria.Id = articulo.IdCateogria;
+            if(articulo.IdCategoria > 0 && articulo.IdCategoria != articuloModificar.Categoria.Id)
+                articuloModificar.Categoria.Id = articulo.IdCategoria;
             if(articulo.Precio > 0 && articulo.Precio != articuloModificar.Precio)
                 articuloModificar.Precio = articulo.Precio;
 
