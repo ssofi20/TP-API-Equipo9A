@@ -27,7 +27,7 @@ namespace CatalogoProductos.API.Controllers
         }
 
         // POST: api/Articulo (Dar de alta Articulo)
-        public void Post([FromBody]ArticuloDto art)
+        public void Post([FromBody] ArticuloDto art)
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo nuevo = new Articulo();
@@ -35,7 +35,8 @@ namespace CatalogoProductos.API.Controllers
             if (!string.IsNullOrEmpty(art.Codigo))
             {
                 nuevo.Codigo = art.Codigo;
-            }else
+            }
+            else
             {
                 throw new Exception("Debe ingresar un código.");
             }
@@ -43,7 +44,8 @@ namespace CatalogoProductos.API.Controllers
             if (!string.IsNullOrEmpty(art.Nombre))
             {
                 nuevo.Nombre = art.Nombre;
-            }else
+            }
+            else
             {
                 throw new Exception("Debe ingresar un nombre.");
             }
@@ -51,7 +53,8 @@ namespace CatalogoProductos.API.Controllers
             if (!string.IsNullOrEmpty(art.Descripcion))
             {
                 nuevo.Descripcion = art.Descripcion;
-            }else
+            }
+            else
             {
                 throw new Exception("Debe ingresar una descripcion.");
             }
@@ -59,7 +62,8 @@ namespace CatalogoProductos.API.Controllers
             if (art.Precio > 0)
             {
                 nuevo.Precio = art.Precio;
-            }else
+            }
+            else
             {
                 throw new Exception("Debe ingresar un precio.");
             }
@@ -67,7 +71,8 @@ namespace CatalogoProductos.API.Controllers
             if (art.IdMarca > 0)
             {
                 nuevo.Marca = new Marca { Id = art.IdMarca };
-            }else
+            }
+            else
             {
                 throw new Exception("Debe ingresar una marca.");
             }
@@ -75,16 +80,23 @@ namespace CatalogoProductos.API.Controllers
             if (art.IdCategoria > 0)
             {
                 nuevo.Categoria = new Categoria { Id = art.IdCategoria };
-            } else
+            }
+            else
             {
                 throw new Exception("Debe ingresar una categoria.");
             }
 
-            negocio.agregar(nuevo);
+            int nuevoId = negocio.agregar(nuevo);
+
+            //Si se recibieron URLs de imagenes, las agrego
+            if (art.UrlImagenes != null && art.UrlImagenes.Count > 0)
+            {
+                negocio.agregarImagenes(nuevoId, art.UrlImagenes);
+            }
         }
 
         // PUT: api/Articulo/5 (Modificar Articulo)
-        public void Put(int id, [FromBody]ArticuloDto articulo)
+        public void Put(int id, [FromBody] ArticuloDto articulo)
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo articuloModificar = new Articulo();
@@ -103,31 +115,31 @@ namespace CatalogoProductos.API.Controllers
                 throw new Exception("No se recibieron datos para modificar");
             }
 
-            if(articulo.Nombre != articuloModificar.Nombre && lista.Exists(a => a.Nombre == articulo.Nombre))
+            if (articulo.Nombre != articuloModificar.Nombre && lista.Exists(a => a.Nombre == articulo.Nombre))
             {
                 throw new Exception("Ya existe un articulo con ese nombre");
             }
 
-            if(articulo.Codigo != articuloModificar.Codigo && lista.Exists(a => a.Codigo == articulo.Codigo))
+            if (articulo.Codigo != articuloModificar.Codigo && lista.Exists(a => a.Codigo == articulo.Codigo))
             {
                 throw new Exception("Ya existe un articulo con ese codigo");
             }
 
             //Mapeo los datos del DTO al objeto Articulo y verifico cuales se modificaron
             articuloModificar.Id = id;
-            if(!string.IsNullOrEmpty(articulo.Nombre))
+            if (!string.IsNullOrEmpty(articulo.Nombre))
                 articuloModificar.Nombre = articulo.Nombre;
-            if(!string.IsNullOrEmpty(articulo.Codigo))
+            if (!string.IsNullOrEmpty(articulo.Codigo))
                 articuloModificar.Codigo = articulo.Codigo;
-            if(!string.IsNullOrEmpty(articulo.Descripcion))
+            if (!string.IsNullOrEmpty(articulo.Descripcion))
                 articuloModificar.Descripcion = articulo.Descripcion;
             articuloModificar.Marca = new Marca();
-            if(articulo.IdMarca > 0 && articulo.IdMarca != articuloModificar.Marca.Id)
+            if (articulo.IdMarca > 0 && articulo.IdMarca != articuloModificar.Marca.Id)
                 articuloModificar.Marca.Id = articulo.IdMarca;
             articuloModificar.Categoria = new Categoria();
-            if(articulo.IdCategoria > 0 && articulo.IdCategoria != articuloModificar.Categoria.Id)
+            if (articulo.IdCategoria > 0 && articulo.IdCategoria != articuloModificar.Categoria.Id)
                 articuloModificar.Categoria.Id = articulo.IdCategoria;
-            if(articulo.Precio > 0 && articulo.Precio != articuloModificar.Precio)
+            if (articulo.Precio > 0 && articulo.Precio != articuloModificar.Precio)
                 articuloModificar.Precio = articulo.Precio;
 
             //Llamo al metodo modificar de la capa negocio

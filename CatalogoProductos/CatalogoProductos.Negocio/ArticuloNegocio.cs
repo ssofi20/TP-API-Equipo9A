@@ -58,9 +58,14 @@ namespace CatalogoProductos.Negocio
 
         public int agregar(Articulo nuevo)
         {
+            AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("INSERT INTO ARTICULOS (Codigo, Nombre, Descripcion, IdMarca, IdCategoria, Precio) VALUES (@Codigo, @Nombre, @Descripcion, @IdMarca, @IdCategoria, @Precio)");
+                //Inserta el artículo Y LUEGO selecciona el ID que se acaba de generar.
+                string consulta = "INSERT INTO ARTICULOS (Codigo, Nombre, Descripcion, IdMarca, IdCategoria, Precio) VALUES (@Codigo, @Nombre, @Descripcion, @IdMarca, @IdCategoria, @Precio); SELECT SCOPE_IDENTITY();";
+
+                datos.setearConsulta(consulta);
+
                 datos.setearParametro("@Codigo", nuevo.Codigo);
                 datos.setearParametro("@Nombre", nuevo.Nombre);
                 datos.setearParametro("@Descripcion", nuevo.Descripcion);
@@ -68,26 +73,44 @@ namespace CatalogoProductos.Negocio
                 datos.setearParametro("@IdCategoria", nuevo.Categoria.Id);
                 datos.setearParametro("@Precio", nuevo.Precio);
 
-                datos.ejecutarAccion();
-                datos.cerrarConexion();
-
-                //Consultar el Id del artículo recién agregado para agregar las imágenes
-                datos = new AccesoDatos();
-                datos.setearConsulta("SELECT Id FROM ARTICULOS WHERE Codigo = @Codigo");
-                datos.setearParametro("@Codigo", nuevo.Codigo);
-                datos.ejecutarLectura();
-                datos.Lector.Read();
-                int idArticulo = (int)datos.Lector["Id"];
-
-                return idArticulo;
+                //Llama a un método que ejecuta la consulta y devuelve un único valor (el ID).
+                return datos.ejecutarAccionScalar();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            finally
+        }
+
+        //Metodo para agregar una lista de imagenes a un articulo
+        public void agregarImagenes(int idArticulo, List<string> Urls)
+        {
+            try
             {
-                datos.cerrarConexion();
+                foreach (string url in Urls)
+                {
+                    //Nuevo objeto por cada imagen para asegurar una conexión limpia
+                    AccesoDatos datos = new AccesoDatos();
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(url))
+                        {
+                            datos.setearConsulta("INSERT INTO IMAGENES (IdArticulo, ImagenUrl) VALUES (@IdArticulo, @ImagenUrl)");
+                            datos.setearParametro("@IdArticulo", idArticulo);
+                            datos.setearParametro("@ImagenUrl", url);
+                            datos.ejecutarAccion();
+                        }
+                    }
+                    finally
+                    {
+                        //Nos aseguramos de cerrar la conexión para ESTA operación.
+                        datos.cerrarConexion();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

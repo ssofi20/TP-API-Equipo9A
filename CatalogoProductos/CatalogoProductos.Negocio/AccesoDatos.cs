@@ -22,6 +22,7 @@ namespace CatalogoProductos.Negocio
         {
             conexion = new SqlConnection("server=.\\SQLEXPRESS; database=CATALOGO_P3_DB; integrated security=true");
             comando = new SqlCommand();
+            comando.Connection = conexion;
         }
 
         public void setearConsulta(string consulta)
@@ -69,6 +70,25 @@ namespace CatalogoProductos.Negocio
             if (lector != null)
                 lector.Close();
             conexion.Close();
+        }
+
+        public void limpiarParametros()
+        {
+            comando.Parameters.Clear();
+        }
+
+        public int ejecutarAccionScalar()
+        {
+            try
+            {
+                conexion.Open();
+                //Ejecuta la consulta y devuelve el valor de la primera columna de la primera fila del resultado (en este caso, el ID).
+                return Convert.ToInt32(comando.ExecuteScalar());
+            }
+            finally
+            {
+                conexion.Close();
+            }
         }
     }
 }
